@@ -1,33 +1,35 @@
 import { CronJob } from "cron";
-import { backup } from "./backup.js";
+import { restore } from "./restore.js";
 import { env } from "./env.js";
 
 console.log("NodeJS Version: " + process.version);
 
-const tryBackup = async () => {
+const tryRestore = async () => {
   try {
-    await backup();
+    await restore();
   } catch (error) {
-    console.error("Error while running backup: ", error);
+    console.error("Error while running restore: ", error);
     process.exit(1);
   }
 }
 
-if (env.RUN_ON_STARTUP || env.SINGLE_SHOT_MODE) {
-  console.log("Running on start backup...");
-
-  await tryBackup();
-
-  if (env.SINGLE_SHOT_MODE) {
-    console.log("Database backup complete, exiting...");
+// Handle restore operations
+if (env.RUN_RESTORE_ON_STARTUP || env.SINGLE_SHOT_RESTORE_MODE) {
+  console.log("Running on start restore...");
+  await tryRestore();
+  
+  if (env.SINGLE_SHOT_RESTORE_MODE) {
+    console.log("Database restore complete, exiting...");
     process.exit(0);
   }
 }
 
-const job = new CronJob(env.BACKUP_CRON_SCHEDULE, async () => {
-  await tryBackup();
-});
-
-job.start();
-
-console.log("Backup cron scheduled...");
+// Set up restore cron job if schedule is provided
+if (env.RESTORE_CRON_SCHEDULE) {
+  const restoreJob = new CronJob(env.RESTORE_CRON_SCHEDULE, async () => {
+    await tryRestore();
+  });
+  
+  restoreJob.start();
+  console.log(`Restore cron scheduled: ${env.RESTORE_CRON_SCHEDULE}`);
+}

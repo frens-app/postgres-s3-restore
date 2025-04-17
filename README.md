@@ -1,6 +1,6 @@
-# Postgres S3 backups
+# Postgres S3 Restore
 
-A simple NodeJS application to backup your PostgreSQL database to S3 via a cron.
+A simple NodeJS application to restore your PostgreSQL database from S3 backups via a cron.
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/I4zGrH)
 
@@ -14,22 +14,22 @@ A simple NodeJS application to backup your PostgreSQL database to S3 via a cron.
 
 - `AWS_S3_REGION` - The name of the region your bucket is located in, set to `auto` if unknown.
 
-- `BACKUP_DATABASE_URL` - The connection string of the database to backup.
+- `DATABASE_URL` - The connection string of the database to restore to.
 
-- `BACKUP_CRON_SCHEDULE` - The cron schedule to run the backup on. Example: `0 5 * * *`
+- `RESTORE_CRON_SCHEDULE` - The cron schedule to run the restore on. Example: `0 3 * * *`
 
 - `AWS_S3_ENDPOINT` - The S3 custom endpoint you want to use. Applicable for 3-rd party S3 services such as Cloudflare R2 or Backblaze R2.
 
 - `AWS_S3_FORCE_PATH_STYLE` - Use path style for the endpoint instead of the default subdomain style, useful for MinIO. Default `false`
 
-- `RUN_ON_STARTUP` - Run a backup on startup of this application then proceed with making backups on the set schedule.
+- `RUN_RESTORE_ON_STARTUP` - Run a restore on startup of this application then proceed with making restores on the set schedule.
 
-- `BACKUP_FILE_PREFIX` - Add a prefix to the file name.
+- `BACKUP_FILE_PREFIX` - The prefix of the backup files to look for in S3.
 
-- `BUCKET_SUBFOLDER` - Define a subfolder to place the backup files in.
+- `BUCKET_SUBFOLDER` - The subfolder where backup files are stored in the S3 bucket.
 
-- `SINGLE_SHOT_MODE` - Run a single backup on start and exit when completed. Useful with the platform's native CRON schedular.
+- `SINGLE_SHOT_RESTORE_MODE` - Run a single restore on start and exit when completed. Useful with the platform's native CRON scheduler.
 
 - `SUPPORT_OBJECT_LOCK` - Enables support for buckets with object lock by providing an MD5 hash with the backup file.
 
-- `BACKUP_OPTIONS` - Add any valid pg_dump option, supported pg_dump options can be found [here](https://www.postgresql.org/docs/current/app-pgdump.html). Example: `--exclude-table=pattern`
+- `RESTORE_OPTIONS` - Add any valid pg_restore option, supported pg_restore options can be found [here](https://www.postgresql.org/docs/current/app-pgrestore.html). Example: `--clean --if-exists`

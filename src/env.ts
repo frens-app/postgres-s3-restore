@@ -5,12 +5,12 @@ export const env = envsafe({
   AWS_SECRET_ACCESS_KEY: str(),
   AWS_S3_BUCKET: str(),
   AWS_S3_REGION: str(),
-  BACKUP_DATABASE_URL: str({
-    desc: 'The connection string of the database to backup.'
+  DATABASE_URL: str({
+    desc: 'The connection string of the database to restore to.'
   }),
-  BACKUP_CRON_SCHEDULE: str({
-    desc: 'The cron schedule to run the backup on.',
-    default: '0 5 * * *',
+  RESTORE_CRON_SCHEDULE: str({
+    desc: 'The cron schedule to run the restore on.',
+    default: '0 3 * * *',
     allowEmpty: true
   }),
   AWS_S3_ENDPOINT: str({
@@ -23,8 +23,8 @@ export const env = envsafe({
     default: false,
     allowEmpty: true
   }),
-  RUN_ON_STARTUP: bool({
-    desc: 'Run a backup on startup of this application',
+  RUN_RESTORE_ON_STARTUP: bool({
+    desc: 'Run a restore on startup of this application',
     default: false,
     allowEmpty: true,
   }),
@@ -37,8 +37,8 @@ export const env = envsafe({
     default: '',
     allowEmpty: true
   }),
-  SINGLE_SHOT_MODE: bool({
-    desc: 'Run a single backup on start and exit when completed',
+  SINGLE_SHOT_RESTORE_MODE: bool({
+    desc: 'Run a single restore on start and exit when completed',
     default: false,
     allowEmpty: true,
   }),
@@ -47,8 +47,8 @@ export const env = envsafe({
     desc: 'Enables support for buckets with object lock by providing an MD5 hash with the backup file',
     default: false
   }),
-  BACKUP_OPTIONS: str({
-    desc: 'Any valid pg_dump option.',
+  RESTORE_OPTIONS: str({
+    desc: 'Any valid pg_restore option.',
     default: '',
     allowEmpty: true,
   }),

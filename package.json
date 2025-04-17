@@ -1,14 +1,14 @@
 {
-  "name": "railway-pg-s3-backup",
+  "name": "postgres-s3-restore",
   "version": "0.0.1",
-  "description": "A simple Node app to backup PostgreSQL databases to an S3 bucket",
+  "description": "A simple Node app to restore PostgreSQL databases from an S3 bucket",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc"
   },
-  "author": "Faraz Patankar",
+  "author": "Faraz Patankar (and hector :DDD !!!)",
   "license": "MIT",
   "devDependencies": {
     "@types/cron": "^2.0.1",
