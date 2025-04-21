@@ -1,4 +1,4 @@
-import { S3Client, S3ClientConfig, ListObjectsV2Command, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, S3ClientConfig, ListObjectsV2Command, GetObjectCommand, _Object, ListObjectsV2CommandOutput } from "@aws-sdk/client-s3";
 import { createWriteStream, unlink } from "fs";
 import { exec } from "child_process";
 import path from "path";
@@ -25,20 +25,35 @@ const downloadFromS3 = async (path: string) => {
   let prefix = env.BUCKET_SUBFOLDER ? `${env.BUCKET_SUBFOLDER}/` : '';
   prefix += env.BACKUP_FILE_PREFIX;
 
-  const listCommand = new ListObjectsV2Command({
-    Bucket: bucket,
-    Prefix: prefix,
-    MaxKeys: 1,
-  });
+  console.log(`Listing objects with prefix: ${prefix}`);
+  let allContents: _Object[] = [];
+  let continuationToken: string | undefined = undefined;
 
-  const listResponse = await client.send(listCommand);
-  
-  if (!listResponse.Contents || listResponse.Contents.length === 0) {
+  do {
+    const listCommand = new ListObjectsV2Command({
+      Bucket: bucket,
+      Prefix: prefix,
+      ContinuationToken: continuationToken,
+    });
+
+    const listResponse: ListObjectsV2CommandOutput = await client.send(listCommand);
+    
+    if (listResponse.Contents) {
+      allContents = allContents.concat(listResponse.Contents);
+    }
+    
+    continuationToken = listResponse.NextContinuationToken;
+
+  } while (continuationToken); // Continue if NextContinuationToken exists
+
+  console.log(`Found ${allContents.length} backup files matching prefix.`);
+
+  if (allContents.length === 0) {
     throw new Error(`No backup files found with prefix ${prefix}`);
   }
 
   // Sort by LastModified to get the most recent
-  const sortedContents = listResponse.Contents.sort((a, b) => {
+  const sortedContents = allContents.sort((a, b) => {
     return (b.LastModified?.getTime() || 0) - (a.LastModified?.getTime() || 0);
   });
 
