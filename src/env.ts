@@ -39,7 +39,7 @@ export const env = envsafe({
   }),
   SINGLE_SHOT_RESTORE_MODE: bool({
     desc: 'Run a single restore on start and exit when completed',
-    default: false,
+    default: true,
     allowEmpty: true,
   }),
   // This is both time consuming and resource intensive so we leave it disabled by default

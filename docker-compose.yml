@@ -3,14 +3,6 @@ services:
     build: .
     env_file:
       - .env
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      - RESTORE_CRON_SCHEDULE=0 3 * * *
-      - RUN_RESTORE_ON_STARTUP=true
-      - SINGLE_SHOT_RESTORE_MODE=false
-      - BACKUP_FILE_PREFIX=backup
-      - BUCKET_SUBFOLDER=
-      - RESTORE_OPTIONS=--clean --if-exists
     restart: unless-stopped
     depends_on:
       - postgres
